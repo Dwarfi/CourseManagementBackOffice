@@ -2,6 +2,9 @@
 
 public interface ICourseService
 {
-    public bool Create(Course course);
-    public List<Course> GetCourseList();
+    public void Create(Course course);
+    public List<Course> Get();
+    public void Delete(int id);
+    public void Update(Course course);
+    public Course? GetById(int id);
 }

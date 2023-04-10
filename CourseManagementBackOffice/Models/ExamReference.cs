@@ -14,5 +14,5 @@ public partial class ExamReference
 
     public virtual Course? Course { get; set; }
 
-    public virtual AppUser? User { get; set; }
+    public virtual User? User { get; set; }
 }

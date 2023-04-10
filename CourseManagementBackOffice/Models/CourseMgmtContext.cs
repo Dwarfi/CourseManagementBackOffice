@@ -10,7 +10,7 @@ public partial class CourseMgmtContext : DbContext
     public CourseMgmtContext(DbContextOptions<CourseMgmtContext> options) : base(options)
     { }
 
-    public virtual DbSet<AppUser> AppUsers { get; set; }
+    public virtual DbSet<User> AppUsers { get; set; }
 
     public virtual DbSet<Course> Courses { get; set; }
 
@@ -33,7 +33,7 @@ public partial class CourseMgmtContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AppUser>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__app_user__3214EC072E6107FE");
 
@@ -51,9 +51,9 @@ public partial class CourseMgmtContext : DbContext
             entity.Property(e => e.LastName)
                 .HasMaxLength(50)
                 .HasColumnName("last_name");
-            entity.Property(e => e.Password)
-                .HasMaxLength(100)
-                .HasColumnName("password");
+            entity.Property(e => e.PasswordHash)
+                .HasMaxLength(500)
+                .HasColumnName("password_hash");
             entity.Property(e => e.Role).HasColumnName("role");
             entity.Property(e => e.UpdatedDate)
                 .HasColumnType("datetime")

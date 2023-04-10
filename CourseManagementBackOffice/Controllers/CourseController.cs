@@ -1,26 +1,72 @@
-﻿using System.Net;
-
-namespace CourseManagementApi.Controllers;
+﻿namespace CourseManagementApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 [Produces("application/json")]
 public class CourseController : ControllerBase
 {
-    private CourseMgmtContext _context;
-    private ICourseService _courseService;
+    private readonly ICourseService _courseService;
 
     public CourseController(ICourseService service)
     {
-        _context = new CourseMgmtContext();
         _courseService = service;
     }
 
     [HttpGet]
-    [Route("[action]")]
-    public IActionResult GetCourses()
+    public IActionResult GetList()
     {
-        var json = JsonConvert.SerializeObject(_courseService.GetCourseList());
-        return Ok(json);
+        try
+        {
+            return Ok(JsonConvert.SerializeObject(_courseService.Get()));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpGet]
+    public IActionResult GetById(int id)
+    {
+        try
+        {
+            var result = _courseService.GetById(id);
+
+            return result is null ? NotFound() : Ok(JsonConvert.SerializeObject(result));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpPost]
+    public IActionResult Update(Course course)
+    {
+        try
+        {
+            _courseService.Update(course);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpDelete]
+    public IActionResult DeleteById(int id)
+    {
+        try
+        {
+            _courseService.Delete(id);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
     }
 }

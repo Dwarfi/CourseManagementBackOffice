@@ -16,7 +16,7 @@ public partial class Course
 
     public virtual ICollection<Exam> Exams { get; } = new List<Exam>();
 
-    public virtual AppUser? InstructorNavigation { get; set; }
+    public virtual User? InstructorNavigation { get; set; }
 
     public virtual ICollection<Lesson> Lessons { get; } = new List<Lesson>();
 }

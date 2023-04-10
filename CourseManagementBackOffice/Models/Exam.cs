@@ -20,5 +20,5 @@ public partial class Exam
 
     public virtual Course? Course { get; set; }
 
-    public virtual AppUser? UpdatedByNavigation { get; set; }
+    public virtual User? UpdatedByNavigation { get; set; }
 }

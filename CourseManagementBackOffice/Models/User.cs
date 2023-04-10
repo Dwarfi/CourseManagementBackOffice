@@ -1,6 +1,6 @@
 ﻿namespace CourseManagementApi.Models;
 
-public partial class AppUser
+public partial class User
 {
     public int Id { get; set; }
 
@@ -10,7 +10,7 @@ public partial class AppUser
 
     public string Email { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
 
     public int Role { get; set; }
 
