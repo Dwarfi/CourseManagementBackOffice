@@ -3,12 +3,11 @@ create table [dbo].[app_user] (
     [first_name] nvarchar(50),
     [last_name] nvarchar(50),
     [email] nvarchar(50) unique,
-    [password] nvarchar(100),
+    [password_hash] nvarchar(100),
     [role] int,
     [created_date] datetime,
     [updated_date] datetime
 ); 
-
 
 create table [dbo].[media] (
     [key] int, 
