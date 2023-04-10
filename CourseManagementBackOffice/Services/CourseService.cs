@@ -1,6 +1,4 @@
-﻿using CourseManagementApi.Interfaces;
-
-namespace CourseManagementApi.Services;
+﻿namespace CourseManagementApi.Services;
 
 public class CourseService : ICourseService
 {

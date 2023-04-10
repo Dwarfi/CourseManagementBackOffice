@@ -1,9 +1,10 @@
-﻿using CourseManagementApi.Interfaces;
+﻿using System.Net;
 
 namespace CourseManagementApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Produces("application/json")]
 public class CourseController : ControllerBase
 {
     private CourseMgmtContext _context;
@@ -17,8 +18,9 @@ public class CourseController : ControllerBase
 
     [HttpGet]
     [Route("[action]")]
-    public void GetCourses()
+    public IActionResult GetCourses()
     {
         var json = JsonConvert.SerializeObject(_courseService.GetCourseList());
+        return Ok(json);
     }
 }

@@ -1,3 +1,5 @@
+using CourseManagementApi.Services;
+
 namespace CourseManagementApi
 {
     public class Program
@@ -14,8 +16,10 @@ namespace CourseManagementApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+            builder.Services.AddScoped<ICourseService, CourseService>();
             
+            var app = builder.Build();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
