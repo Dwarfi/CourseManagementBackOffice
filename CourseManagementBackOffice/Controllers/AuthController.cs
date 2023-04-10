@@ -14,13 +14,11 @@
         [HttpPost("register")]
         public IActionResult Register(UserDto request)
         {
-            switch (_authService.Register(request))
+            return _authService.Register(request) switch
             {
-                case RegistrationStatus.Success:
-                    return Ok();
-                default:
-                    return BadRequest("User with this E-mail already exists");
-            }
+                RegistrationStatus.Success => Ok(),
+                _ => BadRequest("User with this E-mail already exists")
+            };
         }
 
         [HttpPost("login")]
