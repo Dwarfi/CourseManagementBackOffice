@@ -1,12 +1,12 @@
 ﻿namespace CourseManagementApi.Controllers;
 
-public class CourseController : BaseController
+public class UserController : BaseController
 {
-    private readonly ICourseService _courseService;
+    private readonly IUserService _userService;
 
-    public CourseController(ICourseService service)
+    public UserController(IUserService userService)
     {
-        _courseService = service;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -14,7 +14,7 @@ public class CourseController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_courseService.Get()));
+            return Ok(JsonConvert.SerializeObject(_userService.Get()));
         }
         catch (Exception ex)
         {
@@ -27,9 +27,7 @@ public class CourseController : BaseController
     {
         try
         {
-            var result = _courseService.GetById(id);
-
-            return result is null ? NotFound() : Ok(JsonConvert.SerializeObject(result));
+            return Ok(JsonConvert.SerializeObject(_userService.GetById(id)));
         }
         catch (Exception ex)
         {
@@ -38,13 +36,24 @@ public class CourseController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Update(Course course)
+    public IActionResult Create(User user)
     {
         try
         {
-            _courseService.Update(course);
+            return Ok(JsonConvert.SerializeObject(_userService.Create(user)));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
 
-            return Ok();
+    [HttpPost]
+    public IActionResult Update(User user)
+    {
+        try
+        {
+            return Ok(JsonConvert.SerializeObject(_userService.Update(user)));
         }
         catch (Exception ex)
         {
@@ -57,9 +66,7 @@ public class CourseController : BaseController
     {
         try
         {
-            _courseService.Delete(id);
-
-            return Ok();
+            return Ok(JsonConvert.SerializeObject(_userService.Delete(id)));
         }
         catch (Exception ex)
         {

@@ -47,8 +47,7 @@ public class CourseService : ICourseService
         var courseLessons = course.Lessons;
 
         foreach (var lesson in courseLessons)
-            if (!lessons.Any(s => s.CourseId == lesson.CourseId && s.Id == lesson.Id))
-                _context.Lessons.Add(lesson);
+            if (!lessons.Any(s => s.CourseId == lesson.CourseId && s.Id == lesson.Id)) _context.Lessons.Add(lesson);
 
         _context.Courses.Update(record);
         _context.SaveChanges();

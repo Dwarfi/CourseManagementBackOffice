@@ -1,12 +1,12 @@
 ﻿namespace CourseManagementApi.Controllers;
 
-public class CourseController : BaseController
+public class LessonController : BaseController
 {
-    private readonly ICourseService _courseService;
+    private readonly ILessonService _lessonService;
 
-    public CourseController(ICourseService service)
+    public LessonController(ILessonService lessonService)
     {
-        _courseService = service;
+        _lessonService = lessonService;
     }
 
     [HttpGet]
@@ -14,7 +14,7 @@ public class CourseController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_courseService.Get()));
+            return Ok(JsonConvert.SerializeObject(_lessonService.Get()));
         }
         catch (Exception ex)
         {
@@ -27,7 +27,7 @@ public class CourseController : BaseController
     {
         try
         {
-            var result = _courseService.GetById(id);
+            var result = _lessonService.GetById(id);
 
             return result is null ? NotFound() : Ok(JsonConvert.SerializeObject(result));
         }
@@ -38,11 +38,11 @@ public class CourseController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Update(Course course)
+    public IActionResult Update(Lesson lesson)
     {
         try
         {
-            _courseService.Update(course);
+            _lessonService.Update(lesson);
 
             return Ok();
         }
@@ -57,7 +57,7 @@ public class CourseController : BaseController
     {
         try
         {
-            _courseService.Delete(id);
+            _lessonService.Delete(id);
 
             return Ok();
         }
