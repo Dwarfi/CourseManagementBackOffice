@@ -1,4 +1,5 @@
 using CourseManagementApi.Services;
+using Serilog;
 
 namespace CourseManagementApi
 {
@@ -12,6 +13,14 @@ namespace CourseManagementApi
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            var logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .CreateLogger();
+
+            builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
 
             builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<IExamService, ExamService>();
@@ -27,6 +36,7 @@ namespace CourseManagementApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
 
             app.UseAuthorization();
             app.MapControllers();

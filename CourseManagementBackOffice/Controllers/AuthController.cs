@@ -5,10 +5,11 @@
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-
-        public AuthController(IAuthService authService)
+        private readonly ILogger<AuthController> _logger;
+        public AuthController(IAuthService authService, ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
@@ -26,7 +27,17 @@
         {
             var token = _authService.Login(request);
             
-            return !string.IsNullOrEmpty(token) ? Ok(token) : BadRequest("Invalid credentials");
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                _logger.LogInformation($"User {request.Email} logged in");
+                return Ok(token);
+            }
+            else
+            {
+                _logger.LogInformation($"User {request.Email} does not exist");
+                return BadRequest("Invalid credentials");
+            }
         }
     }
 }
