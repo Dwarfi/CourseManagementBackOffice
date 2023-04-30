@@ -1,6 +1,3 @@
 ﻿namespace CourseManagementApi.Interfaces;
 
-public interface IExamService
-{
-    
-}
+public interface IExamService : IBaseInterface<Exam> { }

@@ -1,6 +1,3 @@
 ﻿namespace CourseManagementApi.Interfaces;
 
-public interface IQuestionService
-{
-    
-}
+public interface IQuestionService : IBaseInterface<ExamQuestion> { }

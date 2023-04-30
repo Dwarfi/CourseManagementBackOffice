@@ -9,15 +9,15 @@ public class AuthService : IAuthService
     private readonly CourseMgmtContext _context;
     private readonly IConfiguration _configuration;
 
-    public AuthService(IConfiguration configuration)
+    public AuthService(IConfiguration configuration, CourseMgmtContext context)
     {
-        _context = new CourseMgmtContext();
+        _context = context;
         _configuration = configuration;
     }
 
     public RegistrationStatus Register(UserDto request)
     {
-        if (_context.AppUsers.Any(s => s.Email == request.Email)) return RegistrationStatus.Exists;
+        if (_context.AppUsers.Any(s => s.Email.Equals(request.Email))) return RegistrationStatus.Exists;
 
         _context.AppUsers.Add(new User
         {

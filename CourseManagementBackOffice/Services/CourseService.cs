@@ -4,37 +4,42 @@ public class CourseService : ICourseService
 {
     private readonly CourseMgmtContext _context;
 
-    public CourseService()
+    public CourseService(CourseMgmtContext context)
     {
-        _context = new CourseMgmtContext();
+        _context =  context;
     }
 
-    public void Create(Course course)
+    public HttpStatusCode Create(Course item)
     {
-        _context.Courses.Add(course);
+        _context.Courses.Add(item);
         _context.SaveChanges();
+
+        return HttpStatusCode.Created;
     }
 
     public List<Course> Get() => _context.Courses.ToList();
 
     public Course? GetById(int id) => _context.Courses.SingleOrDefault(c => c.Id == id);
 
-    public void Delete(int id)
+    public HttpStatusCode Delete(int id)
     {
         var record = _context.Courses.SingleOrDefault(s => s.Id == id);
 
-        if (record != null) _context.Courses.Remove(record);
-        
+        if (record is null) return HttpStatusCode.NotFound;
+            
+        _context.Courses.Remove(record);
         _context.SaveChanges();
+
+        return HttpStatusCode.OK;
     }
 
-    public void Update(Course course)
+    public HttpStatusCode Update(Course course)
     {
         var record = _context.Courses.SingleOrDefault(s => s.Id == course.Id);
 
-        if (record == null) return;
+        if (record is null) return HttpStatusCode.NotFound;
 
-        record.UpdatedDate = DateTime.Now;
+        record.UpdatedDate = DateTime.UtcNow;
         record.Description = course.Description;
         record.Instructor = course.Instructor;
 
@@ -45,6 +50,9 @@ public class CourseService : ICourseService
             if (!lessons.Any(s => s.CourseId == lesson.CourseId && s.Id == lesson.Id))
                 _context.Lessons.Add(lesson);
 
+        _context.Courses.Update(record);
         _context.SaveChanges();
+
+        return HttpStatusCode.OK;
     }
 }

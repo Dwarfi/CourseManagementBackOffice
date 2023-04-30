@@ -1,6 +1,3 @@
 ﻿namespace CourseManagementApi.Interfaces;
 
-public interface ILessonService
-{
-    
-}
+public interface ILessonService : IBaseInterface<Lesson> { }
