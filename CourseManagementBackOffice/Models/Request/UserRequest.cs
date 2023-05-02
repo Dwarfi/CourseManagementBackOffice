@@ -1,6 +1,6 @@
-﻿namespace CourseManagementApi.Models;
+﻿namespace CourseManagementApi.Models.Request;
 
-public class UserDto
+public class UserRequest
 {
     public required string Password { get; set; }
     public required string Email { get; set; }

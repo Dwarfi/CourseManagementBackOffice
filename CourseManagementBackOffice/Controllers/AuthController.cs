@@ -1,4 +1,6 @@
-﻿namespace CourseManagementApi.Controllers
+﻿using CourseManagementApi.Models.Request;
+
+namespace CourseManagementApi.Controllers
 {
 
     public class AuthController : BaseController
@@ -12,7 +14,7 @@
         }
 
         [HttpPost("register")]
-        public IActionResult Register(UserDto request)
+        public IActionResult Register(UserRequest request)
         {
             return _authService.Register(request) switch
             {
@@ -22,7 +24,7 @@
         }
 
         [HttpPost("login")]
-        public IActionResult Login(UserDto request)
+        public IActionResult Login(UserRequest request)
         {
             var token = _authService.Login(request);
             

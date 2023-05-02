@@ -6,7 +6,7 @@ public class CourseService : ICourseService
 
     public CourseService(CourseMgmtContext context)
     {
-        _context =  context;
+        _context = context;
     }
 
     public HttpStatusCode Create(Course item)

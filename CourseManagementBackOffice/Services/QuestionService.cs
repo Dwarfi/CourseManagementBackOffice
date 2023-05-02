@@ -1,4 +1,7 @@
-﻿namespace CourseManagementApi.Services;
+﻿using CourseManagementApi.Models.Request;
+using CourseManagementApi.Models.Service.QuestionModels;
+
+namespace CourseManagementApi.Services;
 
 public class QuestionService : IQuestionService
 {
@@ -48,5 +51,35 @@ public class QuestionService : IQuestionService
         _context.SaveChanges();
 
         return HttpStatusCode.Created;
+    }
+
+    public ExamResult CheckAnswers(IEnumerable<QuestionAnswerData> answers)
+    {
+        var questions = _context.ExamQuestions
+            .Where(question => answers.Select(s => s.QuestionId)
+                .Contains(question.Id))
+            .Select(s => new { s.Id, s.Answer, s.Value, s.Text }).ToList();
+
+        var correctAnswers = questions
+            .Where(question =>
+                answers
+                    .Single(s => s.QuestionId == question.Id).QuestionAnswer == question.Answer)
+            .ToList();
+
+        var answerWithValues = new List<QuestionAnswerValue>();
+
+        answerWithValues.AddRange(correctAnswers.Select(s => new QuestionAnswerValue(s.Id, s.Value, true)));
+        answerWithValues.AddRange(questions.ExceptBy(correctAnswers.Select(s => s.Id), s => s.Id)
+            .Select(s => new QuestionAnswerValue(s.Id, s.Value, false)));
+
+        return new ExamResult(CalculateMark(answerWithValues), answerWithValues);
+    }
+
+    private double CalculateMark(List<QuestionAnswerValue> data)
+    {
+        var maxMark = data.Sum(s => s.Value);
+        var actualMark = data.Where(s => s.Correct).Sum(s => s.Value);
+
+        return (actualMark / maxMark) * 100;
     }
 }

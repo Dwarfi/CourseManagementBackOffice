@@ -222,7 +222,7 @@ public partial class CourseMgmtContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("created_date");
             entity.Property(e => e.QuestionId).HasColumnName("question_id");
-            entity.Property(e => e.RightAnswer).HasColumnName("right_answer");
+            entity.Property(e => e.CorrectAnswer).HasColumnName("right_answer");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("updated_by");

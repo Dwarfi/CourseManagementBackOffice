@@ -1,4 +1,6 @@
-﻿namespace CourseManagementApi.Controllers;
+﻿using CourseManagementApi.Models.Request;
+
+namespace CourseManagementApi.Controllers;
 
 public class QuestionController : BaseController
 {
@@ -60,6 +62,20 @@ public class QuestionController : BaseController
             _questionService.Delete(id);
 
             return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpPost]
+    public IActionResult AnswerQuestions(QuestionAnswerRequest request)
+    {
+        try
+        {
+            var result = _questionService.CheckAnswers(request.Answers);
+            return Ok(JsonConvert.SerializeObject(result));
         }
         catch (Exception ex)
         {

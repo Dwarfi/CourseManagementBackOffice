@@ -6,7 +6,7 @@ public partial class QuestionAnswer
 
     public string? AnswerValue { get; set; }
 
-    public bool? RightAnswer { get; set; }
+    public bool? CorrectAnswer { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 

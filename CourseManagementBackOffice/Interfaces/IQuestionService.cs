@@ -1,3 +1,9 @@
-﻿namespace CourseManagementApi.Interfaces;
+﻿using CourseManagementApi.Models.Request;
+using CourseManagementApi.Models.Service.QuestionModels;
 
-public interface IQuestionService : IBaseInterface<ExamQuestion> { }
+namespace CourseManagementApi.Interfaces;
+
+public interface IQuestionService : IBaseInterface<ExamQuestion>
+{
+    public ExamResult CheckAnswers(IEnumerable<QuestionAnswerData> answers);
+}

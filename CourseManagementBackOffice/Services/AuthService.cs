@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using CourseManagementApi.Models.Request;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CourseManagementApi.Services;
@@ -15,7 +16,7 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public RegistrationStatus Register(UserDto request)
+    public RegistrationStatus Register(UserRequest request)
     {
         if (_context.AppUsers.Any(s => s.Email.Equals(request.Email))) return RegistrationStatus.Exists;
 
@@ -34,7 +35,7 @@ public class AuthService : IAuthService
         return RegistrationStatus.Success;
     }
 
-    public string Login(UserDto request)
+    public string Login(UserRequest request)
     {
         var authStatus = Authorize(request);
 
@@ -50,7 +51,7 @@ public class AuthService : IAuthService
         }
     }
 
-    private LoginStatus Authorize(UserDto request)
+    private LoginStatus Authorize(UserRequest request)
     {
         var user = _context.AppUsers.SingleOrDefault(s => s.Email.Equals(request.Email));
 
