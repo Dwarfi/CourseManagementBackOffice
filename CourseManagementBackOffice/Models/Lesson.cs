@@ -1,8 +1,10 @@
 ﻿namespace CourseManagementApi.Models;
 
-public partial class Lesson
+public class Lesson
 {
     public int Id { get; set; }
+
+    public string Title { get; set; }
 
     public string? Subject { get; set; }
 

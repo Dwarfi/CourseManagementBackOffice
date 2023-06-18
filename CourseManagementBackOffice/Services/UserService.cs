@@ -9,29 +9,27 @@ public class UserService : IUserService
         _context = context;
     }
 
-    public List<User> Get() => _context.AppUsers.ToList();
+    public IEnumerable<User> Get() => _context.AppUsers.AsEnumerable();
 
     public User? GetById(int id) => _context.AppUsers.SingleOrDefault(s => s.Id == id);
    
-    public HttpStatusCode Delete(int id)
+    public void Delete(int id)
     {
         var record = _context.AppUsers.SingleOrDefault(s => s.Id == id);
 
-        if(record is null) return HttpStatusCode.NotFound;
+        if(record is null) return;
         
         _context.AppUsers.Remove(record);
         _context.SaveChanges();
-
-        return HttpStatusCode.OK;
     }
 
-    public HttpStatusCode Update(User item)
+    public void Update(User item)
     {
         var record = _context.AppUsers.SingleOrDefault(s => s.Id == item.Id);
 
-        if(record is null) return HttpStatusCode.NotFound;
+        if(record is null) return;
 
-        record.UpdatedDate = DateTime.UtcNow;
+        record.UpdatedDate = DateTime.Now;
         record.FirstName = item.FirstName;
         record.LastName = item.LastName;
         record.Email = item.Email;
@@ -39,15 +37,5 @@ public class UserService : IUserService
 
         _context.AppUsers.Update(record);
         _context.SaveChanges();
-
-        return HttpStatusCode.OK;
-    }
-
-    public HttpStatusCode Create(User item)
-    {
-        _context.AppUsers.Add(item);
-        _context.SaveChanges();
-
-        return HttpStatusCode.Created;
     }
 }

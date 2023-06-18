@@ -1,6 +1,6 @@
 ﻿namespace CourseManagementApi.Models;
 
-public partial class Media
+public class Media
 {
     public int? Key { get; set; }
 

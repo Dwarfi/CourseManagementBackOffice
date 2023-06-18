@@ -1,3 +1,9 @@
-﻿namespace CourseManagementApi.Interfaces;
+﻿using CourseManagementApi.Models.Request.Course;
 
-public interface ICourseService : IBaseInterface<Course> { }
+namespace CourseManagementApi.Interfaces;
+
+public interface ICourseService : IBaseInterface<Course>
+{
+    void Create(CreateCourseRequest request);
+    void Update(UpdateCourseRequest request);
+}

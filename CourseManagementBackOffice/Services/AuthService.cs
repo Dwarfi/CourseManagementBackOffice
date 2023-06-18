@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using CourseManagementApi.Models.Request;
+using CourseManagementApi.Models.Request.User;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CourseManagementApi.Services;
@@ -16,34 +16,34 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public RegistrationStatus Register(UserRequest request)
+    public RegistrationStatus Register(UserRegisterRequest registerRequest)
     {
-        if (_context.AppUsers.Any(s => s.Email.Equals(request.Email))) return RegistrationStatus.Exists;
+        if (_context.AppUsers.Any(s => s.Email.Equals(registerRequest.Email))) return RegistrationStatus.Exists;
 
         _context.AppUsers.Add(new User
         {
             CreatedDate = DateTime.Now,
             UpdatedDate = DateTime.Now,
-            Email = request.Email,
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            PasswordHash = HashPassword(request.Password),
-            Role = (int)request.Role
+            Email = registerRequest.Email,
+            FirstName = registerRequest.FirstName,
+            LastName = registerRequest.LastName,
+            PasswordHash = HashPassword(registerRequest.Password),
+            Role = registerRequest.Role
         });
         _context.SaveChanges();
 
         return RegistrationStatus.Success;
     }
 
-    public string Login(UserRequest request)
+    public string Login(UserLoginRequest registerRequest)
     {
-        var authStatus = Authorize(request);
+        var authStatus = Authorize(registerRequest);
 
         switch (authStatus)
         {
             case LoginStatus.Success:
             {
-                var user = _context.AppUsers.SingleOrDefault(s => s.Email.Equals(request.Email));
+                var user = _context.AppUsers.SingleOrDefault(s => s.Email.Equals(registerRequest.Email));
                 return CreateJwtToken(user!);
             }
             default:
@@ -51,13 +51,13 @@ public class AuthService : IAuthService
         }
     }
 
-    private LoginStatus Authorize(UserRequest request)
+    private LoginStatus Authorize(UserLoginRequest registerRequest)
     {
-        var user = _context.AppUsers.SingleOrDefault(s => s.Email.Equals(request.Email));
+        var user = _context.AppUsers.SingleOrDefault(s => s.Email.Equals(registerRequest.Email));
 
         if (user is null) return LoginStatus.InvalidUsername;
 
-        return ValidatePassword(request.Password, user.PasswordHash)
+        return ValidatePassword(registerRequest.Password, user.PasswordHash)
             ? LoginStatus.Success
             : LoginStatus.InvalidPassword;
     }

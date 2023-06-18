@@ -77,6 +77,9 @@ public partial class CourseMgmtContext : DbContext
             entity.Property(e => e.UpdatedDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_date");
+            entity.Property(e => e.Name)
+                .HasColumnName("name")
+                .HasMaxLength(255);
 
             entity.HasOne(d => d.InstructorNavigation).WithMany(p => p.Courses)
                 .HasForeignKey(d => d.Instructor)
@@ -182,6 +185,7 @@ public partial class CourseMgmtContext : DbContext
             entity.Property(e => e.UpdatedDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_date");
+            entity.Property(e => e.Title).HasColumnName("title").HasMaxLength(255);
 
             entity.HasOne(d => d.Course).WithMany(p => p.Lessons)
                 .HasForeignKey(d => d.CourseId)

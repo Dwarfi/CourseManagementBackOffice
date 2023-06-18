@@ -1,3 +1,9 @@
-﻿namespace CourseManagementApi.Interfaces;
+﻿using CourseManagementApi.Models.Request.Lesson;
 
-public interface ILessonService : IBaseInterface<Lesson> { }
+namespace CourseManagementApi.Interfaces;
+
+public interface ILessonService : IBaseInterface<Lesson>
+{
+    void Create(LessonCreateRequest lesson);
+    void Update(LessonUpdateRequest lesson);
+}

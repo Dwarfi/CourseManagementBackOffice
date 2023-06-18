@@ -2,9 +2,7 @@
 
 public interface IBaseInterface<T>
 {
-    public List<T> Get();
+    public IEnumerable<T> Get();
     public T? GetById(int id);
-    public HttpStatusCode Delete(int id);
-    public HttpStatusCode Update(T item);
-    public HttpStatusCode Create(T item);
+    public void Delete(int id);
 }

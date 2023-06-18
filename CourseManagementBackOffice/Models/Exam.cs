@@ -1,9 +1,8 @@
 ﻿namespace CourseManagementApi.Models;
 
-public partial class Exam
+public class Exam
 {
     public int Id { get; set; }
-
     public int? CourseId { get; set; }
 
     public int? MinGrade { get; set; }

@@ -1,4 +1,6 @@
 ﻿using CourseManagementApi.Models.Request;
+using CourseManagementApi.Models.Request.Question;
+using CourseManagementApi.Util.Validators.Question;
 
 namespace CourseManagementApi.Controllers;
 
@@ -16,7 +18,7 @@ public class QuestionController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_questionService.Get()));
+            return Ok(_questionService.Get());
         }
         catch (Exception ex)
         {
@@ -31,7 +33,7 @@ public class QuestionController : BaseController
         {
             var result = _questionService.GetById(id);
 
-            return result is null ? NotFound() : Ok(JsonConvert.SerializeObject(result));
+            return result is null ? NotFound() : Ok(result);
         }
         catch (Exception ex)
         {
@@ -40,10 +42,29 @@ public class QuestionController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Update(ExamQuestion question)
+    public IActionResult Create([FromBody] QuestionCreateRequest question)
     {
         try
         {
+            new CreateQuestionValidator().ValidateAndThrow(question);
+
+            _questionService.Create(question);
+            
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpPut]
+    public IActionResult Update([FromBody] QuestionUpdateRequest question)
+    {
+        try
+        {
+            new UpdateQuestionValidator().ValidateAndThrow(question);
+
             _questionService.Update(question);
 
             return Ok();
@@ -70,12 +91,13 @@ public class QuestionController : BaseController
     }
 
     [HttpPost]
-    public IActionResult AnswerQuestions(QuestionAnswerRequest request)
+    public IActionResult AnswerQuestions([FromBody] QuestionAnswerRequest request)
     {
         try
         {
-            var result = _questionService.CheckAnswers(request.Answers);
-            return Ok(JsonConvert.SerializeObject(result));
+            new AnswerQuestionValidator().ValidateAndThrow(request);
+
+            return Ok(_questionService.CheckAnswers(request.Answers));
         }
         catch (Exception ex)
         {

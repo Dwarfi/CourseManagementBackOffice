@@ -1,4 +1,6 @@
-﻿namespace CourseManagementApi.Services;
+﻿using CourseManagementApi.Models.Request.Lesson;
+
+namespace CourseManagementApi.Services;
 
 public class LessonService : ILessonService
 {
@@ -9,43 +11,50 @@ public class LessonService : ILessonService
         _context = context;
     }
 
-    public List<Lesson> Get() => _context.Lessons.ToList();
+    public IEnumerable<Lesson> Get() => _context.Lessons.OrderBy(s => s.Index).AsEnumerable();
 
     public Lesson? GetById(int id) => _context.Lessons.SingleOrDefault(s => s.Id == id);
 
-    public HttpStatusCode Delete(int id)
+    public void Delete(int id)
     {
         var record = _context.Lessons.SingleOrDefault(s => s.Id == id);
 
-        if (record is null) return HttpStatusCode.NotFound;
+        if (record is null) return;
 
         _context.Lessons.Remove(record);
         _context.SaveChanges();
-
-        return HttpStatusCode.OK;
     }
 
-    public HttpStatusCode Update(Lesson item)
+    public void Update(LessonUpdateRequest lesson)
     {
-        var record = _context.Lessons.SingleOrDefault(s => s.Id == item.Id);
+        var record = _context.Lessons.SingleOrDefault(s => s.Id == lesson.LessonId);
 
-        if (record is null) return HttpStatusCode.NotFound;
+        if (record is null) return;
 
-        record.UpdatedDate = DateTime.UtcNow;
-        record.CourseId = item.CourseId;
-        record.Subject = item.Subject;
-        record.Index = item.Index;
-        
+        record.Title = lesson.Title;
+        record.UpdatedDate = DateTime.Now;
+        record.CourseId = lesson.CourseId;
+        record.Subject = lesson.Subject;
+        record.Index = lesson.Index;
+        record.FileUrls = string.Join("|", lesson.FileUrls);
+        record.Course = _context.Courses.SingleOrDefault(s => s.Id == record.CourseId);
+
         _context.SaveChanges();
-
-        return HttpStatusCode.OK;
     }
 
-    public HttpStatusCode Create(Lesson item)
+    public void Create(LessonCreateRequest lesson)
     {
-        _context.Lessons.Add(item);
-        _context.SaveChanges();
+        _context.Lessons.Add(new Lesson
+        {
+            Title = lesson.Title,
+            Course = _context.Courses.SingleOrDefault(s => s.Id == lesson.CourseId),
+            Subject = lesson.Subject,
+            Index = lesson.Index,
+            CourseId = lesson.CourseId,
+            CreatedDate = DateTime.Now,
+            FileUrls = string.Join("|", lesson.FileUrls)
+        });
 
-        return HttpStatusCode.Created;
+        _context.SaveChanges();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace CourseManagementApi.Controllers;
+﻿using CourseManagementApi.Util.Validators.User;
+
+namespace CourseManagementApi.Controllers;
 
 public class UserController : BaseController
 {
@@ -14,7 +16,7 @@ public class UserController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_userService.Get()));
+            return Ok(_userService.Get());
         }
         catch (Exception ex)
         {
@@ -27,7 +29,7 @@ public class UserController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_userService.GetById(id)));
+            return Ok(_userService.GetById(id));
         }
         catch (Exception ex)
         {
@@ -35,25 +37,16 @@ public class UserController : BaseController
         }
     }
 
-    [HttpPost]
-    public IActionResult Create(User user)
+    [HttpPut]
+    public IActionResult Update([FromBody] User user)
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_userService.Create(user)));
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex);
-        }
-    }
+            new UserValidator().ValidateAndThrow(user);
 
-    [HttpPost]
-    public IActionResult Update(User user)
-    {
-        try
-        {
-            return Ok(JsonConvert.SerializeObject(_userService.Update(user)));
+            _userService.Update(user);
+
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -66,7 +59,9 @@ public class UserController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_userService.Delete(id)));
+            _userService.Delete(id);
+
+            return Ok();
         }
         catch (Exception ex)
         {

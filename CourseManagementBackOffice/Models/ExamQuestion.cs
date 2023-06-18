@@ -1,6 +1,6 @@
 ﻿namespace CourseManagementApi.Models;
 
-public partial class ExamQuestion
+public class ExamQuestion
 {
     public int Id { get; set; }
 

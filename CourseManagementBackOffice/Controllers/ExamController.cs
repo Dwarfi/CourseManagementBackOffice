@@ -1,4 +1,7 @@
-﻿namespace CourseManagementApi.Controllers;
+﻿using CourseManagementApi.Models.Request.Exam;
+using CourseManagementApi.Util.Validators.Exam;
+
+namespace CourseManagementApi.Controllers;
 
 public class ExamController : BaseController
 {
@@ -14,7 +17,7 @@ public class ExamController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_examService.Get()));
+            return Ok(_examService.Get());
         }
         catch (Exception ex)
         {
@@ -27,7 +30,7 @@ public class ExamController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_examService.GetById(id)));
+            return Ok(_examService.GetById(id));
         }
         catch (Exception ex)
         {
@@ -36,11 +39,15 @@ public class ExamController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Create(Exam exam)
+    public IActionResult Create([FromBody] ExamCreateRequest exam)
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_examService.Create(exam)));
+            new CreateExamValidator().ValidateAndThrow(exam);
+
+            _examService.Create(exam);
+
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -48,12 +55,16 @@ public class ExamController : BaseController
         }
     }
 
-    [HttpPost]
-    public IActionResult Update(Exam exam)
+    [HttpPut]
+    public IActionResult Update([FromBody] Exam exam)
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_examService.Update(exam)));
+            new UpdateExamValidator().ValidateAndThrow(exam);
+
+            _examService.Update(exam);
+
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -66,7 +77,8 @@ public class ExamController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_examService.Delete(id)));
+            _examService.Delete(id);
+            return Ok();
         }
         catch (Exception ex)
         {

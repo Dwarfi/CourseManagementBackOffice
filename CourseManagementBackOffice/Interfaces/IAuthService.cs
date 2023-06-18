@@ -1,9 +1,9 @@
-﻿using CourseManagementApi.Models.Request;
+﻿using CourseManagementApi.Models.Request.User;
 
 namespace CourseManagementApi.Interfaces;
 
 public interface IAuthService
 {
-    public RegistrationStatus Register(UserRequest request);
-    public string Login(UserRequest request);
+    public RegistrationStatus Register(UserRegisterRequest registerRequest);
+    public string Login(UserLoginRequest registerRequest);
 }

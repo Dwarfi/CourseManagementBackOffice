@@ -1,4 +1,7 @@
-﻿namespace CourseManagementApi.Controllers;
+﻿using CourseManagementApi.Models.Request.Course;
+using CourseManagementApi.Util.Validators.Course;
+
+namespace CourseManagementApi.Controllers;
 
 public class CourseController : BaseController
 {
@@ -14,7 +17,7 @@ public class CourseController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_courseService.Get()));
+            return Ok(_courseService.Get());
         }
         catch (Exception ex)
         {
@@ -29,7 +32,24 @@ public class CourseController : BaseController
         {
             var result = _courseService.GetById(id);
 
-            return result is null ? NotFound() : Ok(JsonConvert.SerializeObject(result));
+            return result is null ? NotFound() : Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpPut]
+    public IActionResult Update([FromBody] UpdateCourseRequest course)
+    {
+        try
+        {
+            new UpdateCourseValidator().ValidateAndThrow(course);
+
+            _courseService.Update(course);
+
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -38,11 +58,12 @@ public class CourseController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Update(Course course)
+    public IActionResult Create([FromBody] CreateCourseRequest request)
     {
         try
         {
-            _courseService.Update(course);
+            new CreateCourseValidator().ValidateAndThrow(request);
+            _courseService.Create(request);
 
             return Ok();
         }

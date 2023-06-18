@@ -1,4 +1,7 @@
-﻿namespace CourseManagementApi.Controllers;
+﻿using CourseManagementApi.Models.Request.Lesson;
+using CourseManagementApi.Util.Validators.Lesson;
+
+namespace CourseManagementApi.Controllers;
 
 public class LessonController : BaseController
 {
@@ -14,7 +17,7 @@ public class LessonController : BaseController
     {
         try
         {
-            return Ok(JsonConvert.SerializeObject(_lessonService.Get()));
+            return Ok(_lessonService.Get());
         }
         catch (Exception ex)
         {
@@ -29,7 +32,7 @@ public class LessonController : BaseController
         {
             var result = _lessonService.GetById(id);
 
-            return result is null ? NotFound() : Ok(JsonConvert.SerializeObject(result));
+            return result is null ? NotFound() : Ok(result);
         }
         catch (Exception ex)
         {
@@ -38,10 +41,29 @@ public class LessonController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Update(Lesson lesson)
+    public IActionResult Create([FromBody] LessonCreateRequest lesson)
     {
         try
         {
+            new CreateLessonValidator().ValidateAndThrow(lesson);
+
+            _lessonService.Create(lesson);
+            
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpPut]
+    public IActionResult Update([FromBody] LessonUpdateRequest lesson)
+    {
+        try
+        {
+            new UpdateLessonValidator().ValidateAndThrow(lesson);
+
             _lessonService.Update(lesson);
 
             return Ok();

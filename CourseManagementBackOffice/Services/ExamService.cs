@@ -1,4 +1,6 @@
-﻿namespace CourseManagementApi.Services;
+﻿using CourseManagementApi.Models.Request.Exam;
+
+namespace CourseManagementApi.Services;
 
 public class ExamService : IExamService
 {
@@ -9,15 +11,15 @@ public class ExamService : IExamService
         _context = new CourseMgmtContext();
     }
 
-    public List<Exam> Get() => _context.Exams.ToList();
+    public IEnumerable<Exam> Get() => _context.Exams.AsEnumerable();
 
     public Exam? GetById(int id) => _context.Exams.SingleOrDefault(x => x.Id == id);
 
-    public HttpStatusCode Update(Exam exam)
+    public void Update(Exam exam)
     {
         var record = _context.Exams.SingleOrDefault(s => s.Id == exam.Id);
 
-        if (record is null) return HttpStatusCode.NotFound;
+        if (record is null) return;
 
         record.UpdatedDate = DateTime.Now;
         record.MaxGrade = exam.MaxGrade;
@@ -25,27 +27,28 @@ public class ExamService : IExamService
         record.CourseId = exam.CourseId;
 
         _context.SaveChanges();
-
-        return HttpStatusCode.OK;
     }
 
-    public HttpStatusCode Create(Exam item)
+    public void Create(ExamCreateRequest exam)
     {
-        _context.Exams.Add(item);
+        _context.Exams.Add(new Exam
+        {
+            Course = _context.Courses.SingleOrDefault(s => s.Id == exam.CourseId),
+            CourseId = exam.CourseId,
+            CreatedDate = DateTime.Now,
+            MaxGrade = exam.MaxGrade,
+            MinGrade = exam.MinGrade,
+        });
         _context.SaveChanges();
-
-        return HttpStatusCode.Created;
     }
 
-    public HttpStatusCode Delete(int id)
+    public void Delete(int id)
     {
         var record = _context.Exams.SingleOrDefault(s => s.Id == id);
 
-        if (record is null) return HttpStatusCode.NotFound;
+        if (record is null) return;
         
         _context.Exams.Remove(record);
         _context.SaveChanges();
-
-        return HttpStatusCode.OK;
     }
 }

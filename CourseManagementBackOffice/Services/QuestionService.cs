@@ -1,4 +1,5 @@
 ﻿using CourseManagementApi.Models.Request;
+using CourseManagementApi.Models.Request.Question;
 using CourseManagementApi.Models.Service.QuestionModels;
 
 namespace CourseManagementApi.Services;
@@ -12,45 +13,46 @@ public class QuestionService : IQuestionService
         _context = context;
     }
 
-    public List<ExamQuestion> Get() => _context.ExamQuestions.ToList();
+    public IEnumerable<ExamQuestion> Get() => _context.ExamQuestions.AsEnumerable();
 
     public ExamQuestion? GetById(int id) => _context.ExamQuestions.SingleOrDefault(x => x.Id == id);
 
-    public HttpStatusCode Delete(int id)
+    public void Delete(int id)
     {
         var record = _context.ExamQuestions.SingleOrDefault(x => x.Id == id);
 
-        if(record is null) return HttpStatusCode.NotFound;
+        if (record is null) return;
         
         _context.ExamQuestions.Remove(record);
         _context.SaveChanges();
-
-        return HttpStatusCode.OK;
     }
 
-    public HttpStatusCode Update(ExamQuestion item)
+    public void Update(QuestionUpdateRequest question)
     {
-        var record = _context.ExamQuestions.SingleOrDefault(s => s.Id == item.Id);
+        var record = _context.ExamQuestions.SingleOrDefault(s => s.Id == question.QuestionId);
 
-        if (record is null) return HttpStatusCode.NotFound;
+        if (record is null) return;
 
-        record.UpdatedDate = DateTime.UtcNow;
-        record.Answer = item.Answer;
-        record.Text = item.Text;
-        record.Value = item.Value;
+        record.UpdatedDate = DateTime.Now;
+        record.Answer = question.Answer;
+        record.Text = question.Text;
+        record.Value = question.Value;
 
         _context.ExamQuestions.Update(record);
         _context.SaveChanges();
-
-        return HttpStatusCode.OK;
     }
 
-    public HttpStatusCode Create(ExamQuestion item)
+    public void Create(QuestionCreateRequest question)
     {
-        _context.ExamQuestions.Add(item);
-        _context.SaveChanges();
+        _context.ExamQuestions.Add(new ExamQuestion
+        {
+            Answer = question.Answer,
+            Text = question.Text,
+            Value = question.Value,
+            CreatedDate = DateTime.Now
+        });
 
-        return HttpStatusCode.Created;
+        _context.SaveChanges();
     }
 
     public ExamResult CheckAnswers(IEnumerable<QuestionAnswerData> answers)
@@ -75,11 +77,11 @@ public class QuestionService : IQuestionService
         return new ExamResult(CalculateMark(answerWithValues), answerWithValues);
     }
 
-    private double CalculateMark(List<QuestionAnswerValue> data)
+    private static double CalculateMark(IEnumerable<QuestionAnswerValue> data)
     {
         var maxMark = data.Sum(s => s.Value);
         var actualMark = data.Where(s => s.Correct).Sum(s => s.Value);
 
-        return (actualMark / maxMark) * 100;
+        return actualMark / maxMark * 100;
     }
 }

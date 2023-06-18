@@ -1,3 +1,9 @@
-﻿namespace CourseManagementApi.Interfaces;
+﻿using CourseManagementApi.Models.Request.Exam;
 
-public interface IExamService : IBaseInterface<Exam> { }
+namespace CourseManagementApi.Interfaces;
+
+public interface IExamService : IBaseInterface<Exam>
+{
+    void Create(ExamCreateRequest exam);
+    void Update(Exam exam);
+}

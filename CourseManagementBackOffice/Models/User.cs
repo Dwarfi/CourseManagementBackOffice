@@ -1,6 +1,6 @@
 ﻿namespace CourseManagementApi.Models;
 
-public partial class User
+public class User
 {
     public int Id { get; set; }
 
@@ -12,7 +12,7 @@ public partial class User
 
     public string PasswordHash { get; set; } = null!;
 
-    public int Role { get; set; }
+    public UserRole Role { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
