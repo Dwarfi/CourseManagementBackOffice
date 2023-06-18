@@ -1,6 +1,6 @@
 ﻿namespace CourseManagementApi.Interfaces;
 
-public interface IBaseInterface<T>
+public interface IBaseInterface<out T>
 {
     public IEnumerable<T> Get();
     public T? GetById(int id);

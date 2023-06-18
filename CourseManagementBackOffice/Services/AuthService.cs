@@ -72,7 +72,7 @@ public class AuthService : IAuthService
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Role, ((UserRole)user.Role).DisplayName()),
+            new(ClaimTypes.Role, (user.Role).DisplayName()),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(

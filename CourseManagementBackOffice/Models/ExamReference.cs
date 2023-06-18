@@ -1,6 +1,6 @@
 ﻿namespace CourseManagementApi.Models;
 
-public partial class ExamReference
+public class ExamReference
 {
     public int Id { get; set; }
 

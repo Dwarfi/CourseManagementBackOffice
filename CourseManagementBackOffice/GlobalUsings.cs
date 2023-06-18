@@ -1,12 +1,7 @@
-global using System;
-global using System.Collections.Generic;
-global using CourseManagementApi.Models;
-global using System.Linq;
-global using System.Net;
-global using System.Text;
 global using CourseManagementApi.Interfaces;
+global using CourseManagementApi.Models;
 global using CourseManagementApi.Models.Enumerators;
 global using CourseManagementApi.Util;
 global using FluentValidation;
 global using Microsoft.AspNetCore.Mvc;
-global using Newtonsoft.Json;
+global using System.Text;

@@ -12,7 +12,7 @@ public static class EnumExtensions
     {
         var key = $"{value.GetType().FullName}.{value}";
 
-        var displayName = DisplayNameCache.GetOrAdd(key, x =>
+        var displayName = DisplayNameCache.GetOrAdd(key, _ =>
         {
             var name = (DescriptionAttribute[])value
                 .GetType()
